@@ -8,6 +8,7 @@
 
 namespace SDU;
 
+use JobQueueGroup;
 use SMW;
 use SMWStore;
 use SMWSemanticData;
@@ -146,8 +147,7 @@ class Hooks {
 
 		if ( $wgSDUUseJobQueue ) {
 			wfDebugLog( 'SemanticDependencyUpdater', "[SDU] --------> [Edit Job] $title" );
-			$job = new DummyEditJob( $title );
-			$job->insert();
+			JobQueueGroup::singleton()->push( new DummyEditJob( $title ) );
 		} else {
 			wfDebugLog( 'SemanticDependencyUpdater', "[SDU] --------> [Edit] $title" );
 			$page = WikiPage::newFromID( $title->getArticleId() );
